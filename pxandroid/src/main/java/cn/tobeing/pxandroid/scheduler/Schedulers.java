@@ -1,6 +1,4 @@
-package scheduler;
-
-import cn.tobeing.pxandroid.proxy.OnceWorkProxy;
+package cn.tobeing.pxandroid.scheduler;
 
 /**
  * Created by sunzheng on 16/6/2.

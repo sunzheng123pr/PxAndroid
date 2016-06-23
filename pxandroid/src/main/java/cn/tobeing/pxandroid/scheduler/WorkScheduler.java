@@ -1,4 +1,4 @@
-package scheduler;
+package cn.tobeing.pxandroid.scheduler;
 
 import cn.tobeing.pxandroid.proxy.OnceWorkProxy;
 

@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import scheduler.Scheduler;
-import scheduler.Schedulers;
+import cn.tobeing.pxandroid.scheduler.Scheduler;
+import cn.tobeing.pxandroid.scheduler.Schedulers;
 
 /**
  * Created by sunzheng on 16/6/1.

@@ -1,5 +1,6 @@
 package cn.tobeing.pxandroid.proxy;
 
+import cn.tobeing.pxandroid.MyLog;
 import cn.tobeing.pxandroid.proxy.InvokeRecord;
 import cn.tobeing.pxandroid.proxy.WorkProxy;
 
@@ -14,6 +15,7 @@ public class OnceWorkProxy extends WorkProxy{
 
     @Override
     protected void handleInvoke(InvokeRecord record) {
+        MyLog.printMethod();
         super.handleInvoke(record);
         mLooper.quit();
     }

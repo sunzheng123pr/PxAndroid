@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
     tools:context="cn.tobeing.pxandroidtest.MainActivity">
 
     <TextView
@@ -15,9 +15,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!" />
+
     <Button
         android:id="@+id/btnProxy"
         android:layout_width="wrap_content"
-        android:text="代理演示"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="代理演示" />
+
+    <Button
+        android:id="@+id/btnHandler"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="handler" />
 </LinearLayout>

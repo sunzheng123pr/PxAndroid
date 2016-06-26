@@ -1,70 +1,91 @@
 package cn.tobeing.pxandroid;
 
+import android.os.Handler;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+import cn.tobeing.pxandroid.handler.WorkHandler;
+import cn.tobeing.pxandroid.scheduler.HandlerScheduler;
 import cn.tobeing.pxandroid.scheduler.Scheduler;
 import cn.tobeing.pxandroid.scheduler.Schedulers;
+import cn.tobeing.pxandroid.scheduler.OnceWorkScheduler;
 
 /**
  * Created by sunzheng on 16/6/1.
  */
-public class Px<T> implements Subscriber<T>,IDispatcher<T>{
+public class Px<T> implements Subscriber<T>, IDispatcher<T> {
 
     protected Collection<T> datas;
-    protected Px(){
+    protected Scheduler ioScheduler;
+    private Handler handler;
+
+    protected Px() {
         this(new ArrayList<T>());
     }
-    protected Px(Collection<T> datas){
-        this.datas=datas;
-        this.first=this;
+
+    protected Px(Collection<T> datas) {
+        this.datas = datas;
+        this.first = this;
+        handler = new WorkHandler("px");
+        ioScheduler = new HandlerScheduler(handler);
     }
+
     protected IDispatcher dispatcher;
 
     protected IDispatcher first;
 
     private Scheduler scheduler;
 
-    public Px<T> ui(){
-        scheduler= Schedulers.UI;
-        if(first==this){
-            first=scheduler.schedule(first,IDispatcher.class);
+    public Px<T> ui() {
+        scheduler = Schedulers.UI;
+        if (first == this) {
+            first = scheduler.schedule(first, IDispatcher.class);
         }
         return this;
     }
 
-    public Px<T> io(){
-        scheduler=Schedulers.IO;
-        if(first==this){
-            first=scheduler.schedule(first,IDispatcher.class);
+    public Px<T> io() {
+        scheduler = ioScheduler;
+        if (first == this) {
+            first = scheduler.schedule(first, IDispatcher.class);
         }
         return this;
     }
 
-    protected <E> TransferPx<E> transfer(Function<? super T, ? extends E> func){
-        TransferPx<E> transferPx=new TransferPx(func,this);
-        if(scheduler!=null) {
-            this.dispatcher = scheduler.schedule(transferPx,IDispatcher.class);
-        }else{
+    public Px<T> nio() {
+        scheduler = Schedulers.IO;
+        if (first == this) {
+            first = scheduler.schedule(first, IDispatcher.class);
+        }
+        return this;
+    }
+
+    protected <E> TransferPx<E> transfer(Function<? super T, ? extends E> func) {
+        TransferPx<E> transferPx = new TransferPx(func, this);
+        if (scheduler != null) {
+            this.dispatcher = scheduler.schedule(transferPx, IDispatcher.class);
+        } else {
             this.dispatcher = transferPx;
         }
-        transferPx.first=this.first;
+        transferPx.first = this.first;
         return transferPx;
     }
-    public static <T> Px<T> create(Collection<T> datas){
+
+    public static <T> Px<T> create(Collection<T> datas) {
         return new Px<>(datas);
     }
-    public static <T> Px<T> from(Collection<T> datas){
+
+    public static <T> Px<T> from(Collection<T> datas) {
         return new Px<>(datas);
     }
 
     public static <T> Px<T> from(T[] array) {
-        Collection<T> collection=new ArrayList<T>();
-        if(array!=null){
-            for (T t:array){
+        Collection<T> collection = new ArrayList<T>();
+        if (array != null) {
+            for (T t : array) {
                 collection.add(t);
             }
         }
@@ -74,29 +95,35 @@ public class Px<T> implements Subscriber<T>,IDispatcher<T>{
     public static <T> Px<T> just(final T value) {
         return create(Arrays.asList(value));
     }
-    public static <T> Px<T> just(final T... value){
+
+    public static <T> Px<T> just(final T... value) {
         return create(Arrays.asList(value));
     }
+
     public final <R> Px<R> map(Function<? super T, ? extends R> func) {
         return transfer(func);
     }
-    protected  Action action;
-    public void subscribe(Action<T> action){
-        Log.d("suntest","subscribe");
-        if(scheduler!=null){
-            action=scheduler.schedule(action,Action.class);
+
+    protected Action action;
+
+    public void subscribe(Action<T> action) {
+        Log.d("suntest", "subscribe");
+        if (scheduler != null) {
+            action = scheduler.schedule(action, Action.class);
         }
-        this.action=action;
+        this.action = action;
         first.dispatcher();
     }
-    public void dispatcher(){
-        if(dispatcher!=null) {
+
+    public void dispatcher() {
+        if (dispatcher != null) {
             dispatcher.dispatcher();
-        }else {
+        } else {
             Log.d("suntest", "dispatcher");
             for (T data : datas) {
                 action.call(data);
             }
+            handler.getLooper().quit();
         }
     }
 }

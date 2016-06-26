@@ -5,7 +5,12 @@ package cn.tobeing.pxandroid.scheduler;
  */
 public class Schedulers {
 
-    public static Scheduler UI=new UIScheduler();
-
-    public static Scheduler IO=new WorkScheduler();
+    /**
+     * method will be scheduled in ui thread
+     */
+    public static Scheduler UI = new UIScheduler();
+    /**
+     * echo action will be scheduled in a new io thread
+     */
+    public static Scheduler IO = new OnceWorkScheduler();
 }

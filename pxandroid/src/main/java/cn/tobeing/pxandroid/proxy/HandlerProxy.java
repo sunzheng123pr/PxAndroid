@@ -77,6 +77,14 @@ public class HandlerProxy implements InvocationHandler {
         record.invoke();
     }
 
+    public static Object proxy(Object target, Handler handler) {
+        return proxy(target, handler.getLooper(), target.getClass().getInterfaces());
+    }
+
+    public static Object proxy(Object target, Handler handler, Class<?>... interfaces) {
+        return proxy(target, handler.getLooper(), interfaces);
+    }
+
     public static Object proxy(Object target, Looper looper) {
         return proxy(target, looper, target.getClass().getInterfaces());
     }

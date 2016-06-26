@@ -36,8 +36,6 @@ public class HandlerProxy implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        long time2 = System.nanoTime() - MyLog.lasttime;
-        MyLog.d("suntest", "timecost2=" + time2);
         MyLog.d(TAG, "invoke" + method.getName() + ".thread=" + Thread.currentThread().getName());
         if (!method.getReturnType().equals(Void.TYPE)) {
             throw new IllegalArgumentException("only void method is support in mHandler dispatcher." + method.getReturnType());
@@ -61,7 +59,6 @@ public class HandlerProxy implements InvocationHandler {
 
         @Override
         public void handleMessage(Message msg) {
-            MyLog.printMethod();
             super.handleMessage(msg);
             switch (msg.what) {
                 case MSG_INVOKE_METHOD: {

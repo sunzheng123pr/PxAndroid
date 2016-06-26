@@ -15,7 +15,6 @@ public class OnceWorkProxy extends WorkProxy{
 
     @Override
     protected void handleInvoke(InvokeRecord record) {
-        MyLog.printMethod();
         super.handleInvoke(record);
         mLooper.quit();
     }

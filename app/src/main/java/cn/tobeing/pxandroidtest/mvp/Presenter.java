@@ -20,14 +20,7 @@ public class Presenter implements IPresenter {
 
     @Override
     public void loadMessage() {
-        long time2 = System.nanoTime() - MyLog.lasttime;
-        MyLog.d("suntest", "timecost3=" + time2);
-        Log.d("suntest", "Presenter.loadMessage." + Thread.currentThread());
-        if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
-            return;
-        }
         String messgae = model.getMessage();
-        MyLog.printMethod();
         iViews.showMessage(messgae);
     }
 }

@@ -1,7 +1,6 @@
 package cn.tobeing.pxandroid;
 
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -9,18 +8,22 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import cn.tobeing.pxandroid.handler.WorkHandler;
+import cn.tobeing.pxandroid.scheduler.CountWorkScheduler;
 import cn.tobeing.pxandroid.scheduler.HandlerScheduler;
 import cn.tobeing.pxandroid.scheduler.Scheduler;
 import cn.tobeing.pxandroid.scheduler.Schedulers;
-import cn.tobeing.pxandroid.scheduler.OnceWorkScheduler;
 
 /**
  * Created by sunzheng on 16/6/1.
  */
 public class Px<T> implements Subscriber<T>, IDispatcher<T> {
-    private static final int MSG_FINISH_HANDLER = 0x0001;
     protected Collection<T> datas;
+
     protected HandlerScheduler ioScheduler;
+
+    protected CountWorkScheduler countWorkScheduler;
+
+
     protected Px() {
         this(new ArrayList<T>());
     }
@@ -30,18 +33,20 @@ public class Px<T> implements Subscriber<T>, IDispatcher<T> {
         this.first = this;
     }
 
-    private void initIOScheduler() {
-        if (ioScheduler == null) {
-            Handler handler = new WorkHandler(this.toString());
-            ioScheduler = new HandlerScheduler(handler);
+    private CountWorkScheduler getCountWorkScheduler() {
+        if (countWorkScheduler == null) {
+            countWorkScheduler = new CountWorkScheduler(getCounts());
         }
+        return countWorkScheduler;
+    }
+
+    protected int getCounts() {
+        return datas == null ? 0 : datas.size();
     }
 
     protected IDispatcher dispatcher;
 
     protected IDispatcher first;
-
-    protected Px firstPx;
 
     private Scheduler scheduler;
 
@@ -57,7 +62,7 @@ public class Px<T> implements Subscriber<T>, IDispatcher<T> {
      *
      * */
     public Px<T> io() {
-        scheduler = getScheduler();
+        scheduler = getIOScheduler();
         if (first == this) {
             first = scheduler.schedule(first, IDispatcher.class);
         }
@@ -65,7 +70,7 @@ public class Px<T> implements Subscriber<T>, IDispatcher<T> {
     }
 
     public Px<T> nio() {
-        scheduler = Schedulers.IO;
+        scheduler = getCountWorkScheduler();
         if (first == this) {
             first = scheduler.schedule(first, IDispatcher.class);
         }
@@ -80,7 +85,7 @@ public class Px<T> implements Subscriber<T>, IDispatcher<T> {
             this.dispatcher = transferPx;
         }
         transferPx.first = this.first;
-        transferPx.ioScheduler = this.getScheduler();
+        transferPx.ioScheduler = this.getIOScheduler();
         return transferPx;
     }
 
@@ -126,22 +131,30 @@ public class Px<T> implements Subscriber<T>, IDispatcher<T> {
     }
 
     @Override
-    public HandlerScheduler getScheduler() {
-        initIOScheduler();
+    public HandlerScheduler getIOScheduler() {
+        if (ioScheduler == null) {
+            Handler handler = new WorkHandler(this.toString());
+            ioScheduler = new HandlerScheduler(handler, getCounts());
+        }
         return ioScheduler;
     }
 
-    public void dispatcher() {
+    @Override
+    public void onDispatcher(Object object) {
         if (dispatcher != null) {
-            dispatcher.dispatcher();
+            dispatcher.onDispatcher(object);
         } else {
-            Log.d("suntest", "dispatcher");
-            for (T data : datas) {
-                action.call(data);
-            }
-            if(ioScheduler!=null) {
+            action.call(object);
+            if (ioScheduler != null) {
                 ioScheduler.release();
             }
+        }
+    }
+
+    public void dispatcher() {
+        Log.d("suntest", "dispatcher");
+        for (T data : datas) {
+            onDispatcher(data);
         }
     }
 }

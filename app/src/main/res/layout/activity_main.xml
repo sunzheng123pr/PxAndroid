@@ -17,14 +17,26 @@
         android:text="Hello World!" />
 
     <Button
-        android:id="@+id/btnProxy"
+        android:id="@+id/btnMvpTest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="代理演示" />
+        android:text="mvpTest" />
 
     <Button
-        android:id="@+id/btnHandler"
+        android:id="@+id/btnRxJava"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="handler" />
+        android:text="rxJavaTest" />
+
+    <Button
+        android:id="@+id/btnPxAndroid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="testPxAndroid" />
+
+    <Button
+        android:id="@+id/btnPxAndroid2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="testPxAndroid2" />
 </LinearLayout>

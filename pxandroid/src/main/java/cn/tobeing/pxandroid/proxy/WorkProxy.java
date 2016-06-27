@@ -18,7 +18,7 @@ public class WorkProxy extends HandlerProxy{
     }
     private static Looper newWorkLooper(Object subject){
         HandlerThread handlerThread=new HandlerThread(
-                "WorkProxy."+count.getAndIncrement()+"."+subject.getClass().getName());
+                "WorkProxy."+count.getAndIncrement());
         handlerThread.start();
         return handlerThread.getLooper();
     }

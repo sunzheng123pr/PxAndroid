@@ -5,4 +5,5 @@ package cn.tobeing.pxandroid;
  */
 public interface IDispatcher<T> {
     void dispatcher();
+    void onDispatcher(Object object);
 }

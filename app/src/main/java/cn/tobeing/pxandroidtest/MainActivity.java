@@ -11,6 +11,7 @@ import cn.tobeing.pxandroid.Function;
 import cn.tobeing.pxandroid.MyLog;
 import cn.tobeing.pxandroid.Px;
 import cn.tobeing.pxandroidtest.collection.PlayerManager;
+import cn.tobeing.pxandroidtest.invoke.InvokeTest;
 import cn.tobeing.pxandroidtest.mvp.MVPTestActivity;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btnRxJava).setOnClickListener(this);
         findViewById(R.id.btnPxAndroid).setOnClickListener(this);
         findViewById(R.id.btnCollectionTest).setOnClickListener(this);
+        findViewById(R.id.btnProxy).setOnClickListener(this);
     }
 
     public static void testPxAndroid() {
@@ -106,7 +108,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 testCollectionProxy();
             }
             break;
+            case R.id.btnProxy:{
+                testProxy();
+            }
+            break;
         }
+    }
+    private void testProxy(){
+        InvokeTest.newInstance().helloWorld();
     }
     private void testCollectionProxy(){
         PlayerManager.getInstance().test();

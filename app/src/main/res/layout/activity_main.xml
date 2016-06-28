@@ -17,10 +17,22 @@
         android:text="Hello World!" />
 
     <Button
+        android:id="@+id/btnProxy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="代理测试" />
+
+    <Button
+        android:id="@+id/btnCollectionTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="集合代理" />
+
+    <Button
         android:id="@+id/btnMvpTest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="mvpTest" />
+        android:text="handler代理" />
 
     <Button
         android:id="@+id/btnRxJava"
@@ -39,9 +51,4 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="testPxAndroid2" />
-    <Button
-        android:id="@+id/btnCollectionTest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="testCollectionProxy" />
 </LinearLayout>

@@ -18,16 +18,6 @@ public class TransferPx<T> extends Px<T> {
     protected int getCounts() {
         return px.getCounts();
     }
-
-//    @Override
-//    public void dispatcher() {
-//        for (Object object : px.datas) {
-//            datas.add((T) func.call(object));
-//            onDispatcher(func.call(object));
-//        }
-//        super.dispatcher();
-//    }
-
     @Override
     public void onDispatcher(Object object) {
         super.onDispatcher(func.call(object));

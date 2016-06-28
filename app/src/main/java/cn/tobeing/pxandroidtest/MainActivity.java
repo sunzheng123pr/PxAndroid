@@ -10,6 +10,7 @@ import cn.tobeing.pxandroid.Action;
 import cn.tobeing.pxandroid.Function;
 import cn.tobeing.pxandroid.MyLog;
 import cn.tobeing.pxandroid.Px;
+import cn.tobeing.pxandroidtest.collection.PlayerManager;
 import cn.tobeing.pxandroidtest.mvp.MVPTestActivity;
 import rx.Observable;
 import rx.Scheduler;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btnMvpTest).setOnClickListener(this);
         findViewById(R.id.btnRxJava).setOnClickListener(this);
         findViewById(R.id.btnPxAndroid).setOnClickListener(this);
+        findViewById(R.id.btnCollectionTest).setOnClickListener(this);
     }
 
     public static void testPxAndroid() {
@@ -101,9 +103,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 testPxAndroid2();
             }
             break;
+            case R.id.btnCollectionTest:{
+                testCollectionProxy();
+            }
+            break;
         }
     }
-
+    private void testCollectionProxy(){
+        PlayerManager.getInstance().test();
+    }
     private void testRxJava() {
         Observable.just("one", "two", "three", "four", "five")
                 .map(new Func1<String, String>() {

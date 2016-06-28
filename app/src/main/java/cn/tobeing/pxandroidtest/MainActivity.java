@@ -13,7 +13,6 @@ import cn.tobeing.pxandroid.Px;
 import cn.tobeing.pxandroidtest.collection.PlayerManager;
 import cn.tobeing.pxandroidtest.mvp.MVPTestActivity;
 import rx.Observable;
-import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -33,28 +32,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public static void testPxAndroid() {
-        Px.just("hello", "world", "sunzheng").io().map(new Function<String, String>() {
+        Px.just("hello", "world", "sunzheng").work().map(new Function<String, String>() {
             @Override
             public String call(String data) {//io线程，每一个px行为有一个
                 TestUtil.sleep(500);
                 Log.d("suntest", "Function1." + data + "." + Thread.currentThread());
                 return data + ".call1.";
             }
-        }).nio().map(new Function<String, String>() {
+        }).newThread().map(new Function<String, String>() {
             @Override
             public String call(String data) {//UI线程
                 Log.d("suntest", "Function2." + data + "." + Thread.currentThread());
 //                TestUtil.sleep(500);
                 return data + ".call2";
             }
-        }).nio().map(new Function<String, String>() {
+        }).newThread().map(new Function<String, String>() {
             @Override
             public String call(String data) {//全新的IO线程
                 Log.d("suntest", "Function3." + data + "." + Thread.currentThread());
 //                TestUtil.sleep(500);
                 return data + ".call3";
             }
-        }).nio().map(new Function<String, String>() {
+        }).newThread().map(new Function<String, String>() {
             @Override
             public String call(String data) {//全新的IO线程
                 Log.d("suntest", "Function4." + data + "." + Thread.currentThread());
@@ -70,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     private static void testPxAndroid2(){
         Px.just("one", "two", "three", "four", "five")
-                .nio().map(new Function<String, String>() {
+                .newThread().map(new Function<String, String>() {
             @Override
             public String call(String s) {
                 MyLog.d("suntest", "pxAndroid.Funct1." + s + "." + Thread.currentThread().getName());

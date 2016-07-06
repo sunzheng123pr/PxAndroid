@@ -1,5 +1,5 @@
 # PxAndroid
-这个项目主要是关于动态代理解决线程切换的用户，试一试吧，能给你带来非凡的体验！
+这个项目主要用来解决UI线程和子线程切换的问题，详细用法自己看吧。
 
 代码示例参加：cn.tobeing.pxandroidtest.MainActivity
 和cn.tobeing.pxandroidtest.mvp.MVPTestActivity 

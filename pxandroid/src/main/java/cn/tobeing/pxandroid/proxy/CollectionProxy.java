@@ -12,26 +12,21 @@ public class CollectionProxy implements InvocationHandler {
 
     private Collection<?> subSubjects;
 
-    private Object subject;
-
-    public CollectionProxy(Object subject, Collection<?> subSubjects){
-        this.subSubjects=subSubjects;
-        this.subject=subject;
+    public CollectionProxy(Collection<?> subSubjects) {
+        this.subSubjects = subSubjects;
     }
+
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
-        for (Object object:subSubjects){
-
-            method.invoke(object,args);
+        for (Object object : subSubjects) {
+            method.invoke(object, args);
         }
-        return method.invoke(subject,args);
+        return null;
     }
-    public static Object proxy(Object target, Collection<?> collection) {
-        return proxy(target,collection,target.getClass().getInterfaces());
-    }
-    public static Object proxy(Object target, Collection<?> collection, Class<?>... interfaces){
-        CollectionProxy proxy=new CollectionProxy(target,collection);
-        return Proxy.newProxyInstance(proxy.getClass().getClassLoader(),interfaces,proxy);
+
+    public static Object proxy(Collection<?> collection, Class<?>... interfaces) {
+        CollectionProxy proxy = new CollectionProxy(collection);
+        return Proxy.newProxyInstance(proxy.getClass().getClassLoader(), interfaces, proxy);
     }
 }

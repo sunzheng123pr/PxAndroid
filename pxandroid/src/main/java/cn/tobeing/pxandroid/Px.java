@@ -19,7 +19,7 @@ import cn.tobeing.pxandroid.scheduler.Schedulers;
 public class Px<T> implements Subscriber<T>, IDispatcher<T> {
     protected Collection<T> datas;
 
-    protected HandlerScheduler ioScheduler;
+    protected HandlerScheduler workScheduler;
 
     protected CountWorkScheduler countWorkScheduler;
 
@@ -44,12 +44,15 @@ public class Px<T> implements Subscriber<T>, IDispatcher<T> {
         return datas == null ? 0 : datas.size();
     }
 
-    protected IDispatcher dispatcher;
+    protected IDispatcher next;
 
     protected IDispatcher first;
 
     private Scheduler scheduler;
 
+    /**
+     * changed to ui thread
+     */
     public Px<T> ui() {
         scheduler = Schedulers.UI;
         if (first == this) {
@@ -59,17 +62,21 @@ public class Px<T> implements Subscriber<T>, IDispatcher<T> {
     }
 
     /**
-     *
-     * */
-    public Px<T> io() {
-        scheduler = getIOScheduler();
+     * change to work thread
+     * 每一个Px行为有一个work thread
+     */
+    public Px<T> work() {
+        scheduler = getWorkScheduler();
         if (first == this) {
             first = scheduler.schedule(first, IDispatcher.class);
         }
         return this;
     }
 
-    public Px<T> nio() {
+    /**
+     * 切换到新的后台线程
+     */
+    public Px<T> newThread() {
         scheduler = getCountWorkScheduler();
         if (first == this) {
             first = scheduler.schedule(first, IDispatcher.class);
@@ -80,12 +87,12 @@ public class Px<T> implements Subscriber<T>, IDispatcher<T> {
     protected <E> TransferPx<E> transfer(Function<? super T, ? extends E> func) {
         TransferPx<E> transferPx = new TransferPx(func, this);
         if (scheduler != null) {
-            this.dispatcher = scheduler.schedule(transferPx, IDispatcher.class);
+            this.next = scheduler.schedule(transferPx, IDispatcher.class);
         } else {
-            this.dispatcher = transferPx;
+            this.next = transferPx;
         }
         transferPx.first = this.first;
-        transferPx.ioScheduler = this.getIOScheduler();
+        transferPx.workScheduler = this.getWorkScheduler();
         return transferPx;
     }
 
@@ -131,22 +138,22 @@ public class Px<T> implements Subscriber<T>, IDispatcher<T> {
     }
 
     @Override
-    public HandlerScheduler getIOScheduler() {
-        if (ioScheduler == null) {
+    public HandlerScheduler getWorkScheduler() {
+        if (workScheduler == null) {
             Handler handler = new WorkHandler(this.toString());
-            ioScheduler = new HandlerScheduler(handler, getCounts());
+            workScheduler = new HandlerScheduler(handler, getCounts());
         }
-        return ioScheduler;
+        return workScheduler;
     }
 
     @Override
     public void onDispatcher(Object object) {
-        if (dispatcher != null) {
-            dispatcher.onDispatcher(object);
+        if (next != null) {
+            next.onDispatcher(object);
         } else {
             action.call(object);
-            if (ioScheduler != null) {
-                ioScheduler.release();
+            if (workScheduler != null) {
+                workScheduler.release();
             }
         }
     }

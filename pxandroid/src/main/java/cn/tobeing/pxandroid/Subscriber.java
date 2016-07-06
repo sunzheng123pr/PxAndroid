@@ -9,5 +9,5 @@ public interface Subscriber<T> {
 
     void subscribe(Action<T> action);
 
-    HandlerScheduler getIOScheduler();
+    HandlerScheduler getWorkScheduler();
 }

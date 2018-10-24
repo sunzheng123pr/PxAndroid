@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).newThread().map(new Function<String, String>() {
             @Override
-            public String call(String data) {//UI线程
+            public String call(String data) {//全新的IO线程
                 Log.d("suntest", "Function2." + data + "." + Thread.currentThread());
 //                TestUtil.sleep(500);
                 return data + ".call2";

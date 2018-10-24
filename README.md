@@ -1,7 +1,5 @@
 # PxAndroid
-这个项目主要用来解决UI线程和子线程切换的问题，详细用法自己看吧。
+这是一个使用动态代理技术来解决线程切换，集合事件分发，以及仿写RxJava的一个项目。
+下面我们来简单针对各个模块做介绍。
 
-代码示例参加：cn.tobeing.pxandroidtest.MainActivity
-和cn.tobeing.pxandroidtest.mvp.MVPTestActivity 
-
-用PxAndroid来解决你的线程切换的问题。
+##动态代理

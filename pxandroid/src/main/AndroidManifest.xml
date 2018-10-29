@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cn.tobeing.pxandroid">
+    package="cn.sun.pxandroid">
 
     <application
         android:allowBackup="true"

@@ -77,7 +77,7 @@ public class HandlerProxy {
         }
 
         /**
-         * method called in work handle
+         * method called in io handle
          */
         protected void handleInvoke(InvokeRecord record) {
             record.invoke();

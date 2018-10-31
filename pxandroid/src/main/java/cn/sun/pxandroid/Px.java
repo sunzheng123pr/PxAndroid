@@ -38,10 +38,10 @@ public final class Px<T> implements PxTask<T> {
     }
 
     /**
-     * change to work thread
+     * change to io thread
      * 每一个Px行为有一个work thread
      */
-    public Px<T> work() {
+    public Px<T> io() {
         Px<T> nextTask = Px.just();
         this.next = (PxTask) WorkProxy.proxy(nextTask);
         nextTask.first = this.first;

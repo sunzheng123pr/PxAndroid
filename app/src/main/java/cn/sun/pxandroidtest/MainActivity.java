@@ -39,7 +39,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     public static void testPxAndroid() {
-        Px.just("hello", "world", "sunzheng").work().map(new Function<String, String>() {
+        Px.just("hello", "world", "sunzheng").io().map(new Function<String, String>() {
             @Override
             public String call(Px<String> px, String data) {//io线程，每一个px行为有一个
                 TestUtil.sleep(500);
@@ -60,7 +60,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 TestUtil.sleep(500);
                 return data + ".call3";
             }
-        }).work().map(new Function<String, String>() {
+        }).io().map(new Function<String, String>() {
             @Override
             public String call(Px<String> px, String data) {//线程池
                 Log.d("suntest", "Function4." + data + "." + isMainThread());

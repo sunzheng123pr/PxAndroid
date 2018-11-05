@@ -5,6 +5,7 @@ import android.os.Looper;
 import android.os.Message;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
@@ -14,47 +15,37 @@ import java.lang.reflect.Proxy;
  * Created by sunzheng on 16/5/30.
  */
 public class HandlerProxy {
-    public static Object proxy(Object target, Handler handler) {
-        return proxy(target, handler.getLooper(), target.getClass().getInterfaces());
-    }
-
-    public static Object proxy(Object target, Handler handler, Class<?>... interfaces) {
-        return proxy(target, handler.getLooper(), interfaces);
-    }
-
-    public static Object proxy(Object target, Looper looper) {
-        return proxy(target, looper, target.getClass().getInterfaces());
-    }
-
     public static Object proxy(Object target, Looper looper, Class<?>... interfaces) {
         PostInvocationH postInvocationH = new PostInvocationH(target, looper);
         return Proxy.newProxyInstance(postInvocationH.getClass().getClassLoader(), interfaces, postInvocationH);
     }
 
-
     public static class PostInvocationH implements InvocationHandler {
-        private static final String TAG = "HandlerProxy";
         protected Looper mLooper;
-
         private Handler mHandler;
+        protected Object target;
 
-        protected Object subject;
-
-        public PostInvocationH(Object subject, Looper looper) {
-            this.subject = subject;
+        public PostInvocationH(Object target, Looper looper) {
+            this.target = target;
             mHandler = new H(looper);
             mLooper = looper;
         }
 
-        private static final int MSG_INVOKE_METHOD = 0x001;
-
         @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        public Object invoke(Object proxy, final Method method, final Object[] args) throws Throwable {
             if (!method.getReturnType().equals(Void.TYPE)) {
                 throw new IllegalArgumentException("only void method is support in mHandler dispatcher." + method.getReturnType());
             }
-            mHandler.obtainMessage(MSG_INVOKE_METHOD, InvokeRecord.obtain(subject, method, args)).sendToTarget();
-
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        method.invoke(target, args);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
             return null;
         }
 

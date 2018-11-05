@@ -8,7 +8,6 @@ import java.util.List;
  */
 public class PlayerStateDispatcher implements IPlayerStateDispatcher {
     private List<PlayerStateListener> playerStateListeners = new ArrayList<>();
-
     @Override
     public void dispatcherStart() {
         synchronized (playerStateListeners) {
@@ -17,7 +16,6 @@ public class PlayerStateDispatcher implements IPlayerStateDispatcher {
             }
         }
     }
-
     @Override
     public void dispatcherParpered() {
         synchronized (playerStateListeners) {
@@ -26,7 +24,6 @@ public class PlayerStateDispatcher implements IPlayerStateDispatcher {
             }
         }
     }
-
     @Override
     public void dispatcherPause() {
         synchronized (playerStateListeners) {

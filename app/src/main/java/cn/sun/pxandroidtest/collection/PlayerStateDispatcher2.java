@@ -13,17 +13,14 @@ public class PlayerStateDispatcher2 implements IPlayerStateDispatcher {
     private List<PlayerStateListener> playerStateListeners = new ArrayList<>();
 
     private PlayerStateListener listenerProxy = (PlayerStateListener) CollectionProxy.proxy(playerStateListeners, PlayerStateListener.class);
-
     @Override
     public void dispatcherStart() {
         listenerProxy.onStart();
     }
-
     @Override
     public void dispatcherParpered() {
         listenerProxy.onParpered();
     }
-
     @Override
     public void dispatcherPause() {
         listenerProxy.onPause();

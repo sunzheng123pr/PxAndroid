@@ -28,4 +28,5 @@ dependencies {
     implementation project(':pxandroid')
     implementation 'io.reactivex:rxandroid:1.0.1'
     implementation 'io.reactivex:rxjava:1.0.14'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
 }
